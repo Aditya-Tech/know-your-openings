@@ -1,0 +1,187 @@
+
+
+<html>
+  <head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="json3.min.js"></script>
+    <script src="chessboardjs-master/website/js/chess-0.10.2.min.js"></script>
+
+    <script src="chessboardjs-master/src/chessboard.js"></script>
+    <link rel="stylesheet" href="chessboardjs-master/src/chessboard.css" />
+  </head>
+
+
+
+  <body>
+    <div id="board" style="width: 400px"></div>
+    <p>Status: <span id="status"></span></p>
+    <p>FEN: <span id="fen"></span></p>
+    <p>PGN: <span id="pgn"></span></p>
+     <input type="text" name="move" id="move" placeholder="Type move here..."><button type="submit" onclick="movePiece()">Submit</button>
+    <script>
+
+
+      var move = "Nf3";
+      var moveColor;
+
+      var board,
+          game = new Chess(),
+          statusEl = $('#status'),
+          fenEl = $('#fen'),
+          pgnEl = $('#pgn');
+
+      // do not pick up pieces if the game is over
+      // only pick up pieces for the side to move
+      var onDragStart = function(source, piece, position, orientation) {
+        if (game.game_over() === true ||
+            (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+            (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+          return false;
+        }
+      };
+
+      var onDrop = function(source, target) {
+        // see if the move is legal
+        var move = game.move({
+          from: source,
+          to: target,
+          promotion: 'q' // NOTE: always promote to a queen for example simplicity
+        });
+
+        // illegal move
+        if (move === null) return 'snapback';
+
+        updateStatus();
+        return true;
+      };
+
+      // update the board position after the piece snap
+      // for castling, en passant, pawn promotion
+      var onSnapEnd = function() {
+        board.position(game.fen());
+      };
+
+      var updateStatus = function() {
+        var status = '';
+
+        moveColor = 'White';
+        if (game.turn() === 'b') {
+          moveColor = 'Black';
+        }
+
+        // checkmate?
+        if (game.in_checkmate() === true) {
+          status = 'Game over, ' + moveColor + ' is in checkmate.';
+        }
+
+        // draw?
+        else if (game.in_draw() === true) {
+          status = 'Game over, drawn position';
+        }
+
+        // game still on
+        else {
+          status = moveColor + ' to move';
+
+          // check?
+          if (game.in_check() === true) {
+            status += ', ' + moveColor + ' is in check';
+          }
+        }
+
+        statusEl.html(status);
+        fenEl.html(game.fen());
+        pgnEl.html(game.pgn());
+      };
+
+      var cfg = {
+        draggable: true,
+        position: 'start',
+        onDragStart: onDragStart,
+        onDrop: onDrop,
+        onSnapEnd: onSnapEnd
+      };
+      board = ChessBoard('board', cfg);
+
+      updateStatus();
+
+      function getMoveArray(moves) {
+        moves = moves.split(".");
+        for (var i = 0; i < moves.length; i++) {
+          if (moves[i] % 1 === 0) {
+            moves.splice(i, 1);
+          }
+        }
+
+        for (var i = 0; i < moves.length; i++) {
+          moves[i] = moves[i].split(" ");
+          if (moves[i].length > 2) {
+            moves[i].splice(2, 1);
+          }
+        }
+
+        return moves;
+      }
+
+      function getMove(move) {
+
+        var letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+        move = move.split("x");
+
+        if (move.length == 1) {
+          if (move == "O-O") {
+            if (moveColor == "White") {
+              return "castles-short-white";
+            } else {
+              return "castles-short-black";
+            }
+          } else if (move == "O-O-O") {
+            if (moveColor == "White") {
+              return "castles-long-white"
+            } else {
+              return "castles-long-black"
+            }
+          }
+        }
+        return move;
+
+
+      }
+
+
+
+      function movePiece() {
+        var move = document.getElementById("move").value;
+        // console.log("Moving...")
+        var from = "e1";
+        var to = "g1";
+        var moves = "1.e4 Nf6 2.e5 Nd5 3.c4 Nb6 4.c5 Nd5 5.Nc3 e6 6.Bc4";
+
+        console.log(getMove("Nxf6"))
+
+
+        // console.log(getMoveArray(moves))
+
+        if (onDrop(from, to) == true) {
+          board.move(from + "-" + to);
+
+        }
+        updateStatus();
+
+        // console.log(moveColor)
+
+
+      }
+    </script>
+
+  </body>
+
+
+</html>
