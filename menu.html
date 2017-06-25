@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="globals.js"></script>
+
+  <script src="json3.min.js"></script>
+  <script src="chessboardjs-master/website/js/chess-0.10.2.min.js"></script>
+
+  <script src="chessboardjs-master/src/chessboard.js"></script>
+  <script src="globals.js"></script>
+
+
+  <style>
+    body {
+      position: relative;
+    }
+    .section {
+      height:20px;
+      padding: 30px 30px 45px 30px;
+      border-style: solid;
+      text-align: center;
+    }
+
+    .section:nth-child(even) {background: #CCC}
+
+    #section1 {
+      height:20px;
+      padding-top: 75px;
+      border-style: solid;
+      background: #CCC
+    }
+    /*
+    #section2 {
+      padding-top: 50px;
+      height: 500px;
+      color: #fff;
+      background-color: #673ab7;
+    }
+
+    #section3 {
+      padding-top: 50px;
+      height: 500px;
+      color: #fff;
+      background-color: #ff9800;
+    }
+
+    #section41 {
+      padding-top: 50px;
+      height: 500px;
+      color: #fff;
+      background-color: #00bcd4;
+    }
+
+    #section42 {
+      padding-top: 50px;
+      height: 500px;
+      color: #fff;
+      background-color: #009688;
+    }*/
+  </style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <!-- <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span> -->
+      </button>
+        <a class="navbar-brand" href="#">Know Your Openings</a>
+      </div>
+      <div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <!-- <ul class="nav navbar-nav">
+            <li><a href="#section1">Section 1</a></li>
+            <li><a href="#section2">Section 2</a></li>
+            <li><a href="#section3">Section 3</a></li>
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Section 4 <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#section41">Section 4-1</a></li>
+                <li><a href="#section42">Section 4-2</a></li>
+              </ul>
+            </li>
+          </ul> -->
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="openings">
+    <form action="index.html" method="GET">
+      <div id="section1" class="section container-fluid">
+        <input type="hidden" name="id" value="0" />
+        <input type="submit" value="Alekhine Defense, Balogh Variation" />
+      </div>
+    </form>
+  </div>
+
+
+  <script>
+    opList = [[openings[0]["FIELD1"], openings[0]["FIELD11"]]]
+
+
+    for (var i = 1; i < openings.length; i++) {
+      opList.push([openings[i]["FIELD1"], openings[i]["FIELD11"]])
+      $("#openings").append('<form action="index.html" method="GET"><div id="section' + (i + 1) + '" class="section container-fluid"><input type="hidden" name="id" value="' + i + '"/><input type="submit" value="' + openings[i]["FIELD1"] + '"/></div></form>'  );
+    }
+
+
+  </script>
+</body>
+
+</html>
