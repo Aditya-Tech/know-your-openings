@@ -3,6 +3,38 @@
 <html>
   <head>
     <!-- Latest compiled and minified CSS -->
+    <style>
+      a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+      }
+
+      a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      .previous {
+        background-color: #f1f1f1;
+        color: black;
+      }
+
+      .next {
+        background-color: #4CAF50;
+        color: white;
+      }
+
+      .round {
+        border-radius: 50%;
+      }
+
+      .container {
+        height: 100%;
+        display: table-cell;
+        vertical-align: middle;
+      }
+    </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <!-- jQuery library -->
@@ -26,17 +58,22 @@
 
 
   <body>
-    <div id="board" style="width: 400px"></div>
-    <p>Status: <span id="status"></span></p>
-    <p>FEN: <span id="fen"></span></p>
-    <p>PGN: <span id="pgn"></span></p>
-     <input type="text" name="move" id="move" placeholder="Type move here..."/><button type="submit" onclick="movePiece()">Submit</button>
+    <div id="content" style="text-align:center;">
+      <h1 id="currentOpening"></h1>
+      <div id="boardArea" class="col-md-10 col-md-offset-4">
+        <div id="board" style="height:400px; width:400px;" ></div>
+      </div>
+      <!-- <p>Status: <span id="status"></span></p>
+      <p>PGN: <span id="pgn"></span></p> -->
+      <!-- <a href="#" onclick="movePiece()" class="previous">&#8249;</a> -->
+      <a href="#" onclick="movePiece()" class="next">&#8250;</a>
+    </div>
     <script>
 
       var tempHref = window.location.href.split("id=");
       var id = tempHref[1];
 
-      var move = "Nf3";
+
       var moveColor;
 
       var board,
@@ -185,12 +222,28 @@
           }
         }
 
+        if (move.length === 4 && move[1] == 'x' && letters.includes(move[0])) {
+
+
+          if (toMove == 'w') {
+            var fw = parseInt(move[3]) - 1;
+            console.log(fw)
+            temp = move[0] + fw + "-" + move[2] + move[3];
+          } else {
+            var fw = parseInt(move[3]) + 1;
+            console.log(fw)
+            temp = move[0] + fw + "-" + move[2] + move[3];
+          }
+          console.log(temp)
+          return temp;
+
+        }
+
         move = move.replace('x', '')
 
 
         if (letters.includes(move[0]) && move.length === 3) {
-          console.log(move)
-          move = move.replace('d', '')
+          move = move.replace(move[0], '')
         }
 
         if (move == "O-O") {
@@ -219,6 +272,7 @@
             }
           }
         }
+
         if (move.length == 3) {
 
           if (move[0] == 'B') { // BISHOP MOVE LOGIC
@@ -282,7 +336,8 @@
       }
 
 
-      var moves = "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Bf5 5.Ng3 Bg6 6.h4 h6 7.Nf3 Nd7 8.h5 Bh7 9.Bd3 Bxd3 10.Qxd3";
+      var moves = openings[id]["FIELD11"]
+      document.getElementById("currentOpening").innerHTML = openings[id]["FIELD1"]
       var moveList = getMoveArray(moves)
       var i = 0;
       var j = 0;
