@@ -1,0 +1,395 @@
+
+
+<html>
+  <head>
+    <!-- Latest compiled and minified CSS -->
+    <style>
+      a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+      }
+
+      a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      .previous {
+        background-color: #f1f1f1;
+        color: black;
+      }
+
+      .next {
+        background-color: #4CAF50;
+        color: white;
+      }
+
+      .round {
+        border-radius: 50%;
+      }
+
+      .container {
+        height: 100%;
+        display: table-cell;
+        vertical-align: middle;
+      }
+    </style>
+    <title>Study</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="json3.min.js"></script>
+    <script src="chessboardjs-master/website/js/chess-0.10.2.min.js"></script>
+
+    <script src="chessboardjs-master/src/chessboard.js"></script>
+    <script src="globals.js"></script>
+
+
+
+
+
+    <link rel="stylesheet" href="chessboardjs-master/src/chessboard.css" />
+  </head>
+
+
+
+  <body>
+    <div id="content" style="text-align:center;">
+      <h1 id="currentOpening"></h1>
+      <div id="boardArea" class="col-md-10 col-md-offset-4">
+        <div id="board" style="height:400px; width:400px;" ></div>
+      </div>
+      <!-- <p>Status: <span id="status"></span></p>
+      <p>PGN: <span id="pgn"></span></p> -->
+      <!-- <a href="#" onclick="movePiece()" class="previous">&#8249;</a> -->
+      <a href="#" onclick="movePiece()" class="next">&#8250;</a>
+    </div>
+    <script>
+
+      var tempHref = window.location.href.split("id=");
+      var id = tempHref[1];
+
+
+      var moveColor;
+
+      var board,
+          game = new Chess(),
+          statusEl = $('#status'),
+          fenEl = $('#fen'),
+          pgnEl = $('#pgn');
+
+      // do not pick up pieces if the game is over
+      // only pick up pieces for the side to move
+      var onDragStart = function(source, piece, position, orientation) {
+        if (game.game_over() === true ||
+            (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+            (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+          return false;
+        }
+      };
+
+      var onDrop = function(source, target) {
+        // see if the move is legal
+        var move = game.move({
+          from: source,
+          to: target,
+          promotion: 'q' // NOTE: always promote to a queen for example simplicity
+        });
+
+        // illegal move
+        if (move === null) return 'snapback';
+
+        updateStatus();
+
+      };
+
+      function verifyMove(source, target) {
+        var move = game.move({
+          from: source,
+          to: target,
+          promotion: 'q' // NOTE: always promote to a queen for example simplicity
+        });
+
+        // illegal move
+        if (move === null) return false;
+
+        return true;
+      }
+
+      // update the board position after the piece snap
+      // for castling, en passant, pawn promotion
+      var onSnapEnd = function() {
+        board.position(game.fen());
+      };
+
+      var updateStatus = function() {
+        var status = '';
+
+        moveColor = 'White';
+        if (game.turn() === 'b') {
+          moveColor = 'Black';
+        }
+
+        // checkmate?
+        if (game.in_checkmate() === true) {
+          status = 'Game over, ' + moveColor + ' is in checkmate.';
+        }
+
+        // draw?
+        else if (game.in_draw() === true) {
+          status = 'Game over, drawn position';
+        }
+
+        // game still on
+        else {
+          status = moveColor + ' to move';
+
+          // check?
+          if (game.in_check() === true) {
+            status += ', ' + moveColor + ' is in check';
+          }
+        }
+
+        statusEl.html(status);
+        fenEl.html(game.fen());
+        pgnEl.html(game.pgn());
+      };
+
+      var cfg = {
+        draggable: true,
+        position: 'start',
+        onDragStart: onDragStart,
+        onDrop: onDrop,
+        onSnapEnd: onSnapEnd
+      };
+      board = ChessBoard('board', cfg);
+
+
+      function getMoveArray(moves) {
+        moves = moves.split(".");
+        for (var i = 0; i < moves.length; i++) {
+          if (moves[i] % 1 === 0) {
+            moves.splice(i, 1);
+          }
+        }
+
+        for (var i = 0; i < moves.length; i++) {
+          moves[i] = moves[i].split(" ");
+          if (moves[i].length > 2) {
+            moves[i].splice(2, 1);
+          }
+        }
+
+        return moves;
+      }
+
+      var from;
+      var to;
+      var letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
+      function getMove(move, toMove) {
+        var pos = board.position();
+
+        var pawns = [];
+        var bishops = [];
+        var knights = [];
+        var rooks = [];
+        var queens = [];
+        var kings = [];
+
+
+
+        for (var key in pos) {
+          if (pos.hasOwnProperty(key)) {
+            var val = pos[key];
+            if (val[1] == 'P') {
+              pawns.push(key)
+            } else if (val[1] == 'B') {
+              bishops.push(key)
+            } else if (val[1] == 'N') {
+              knights.push(key)
+            } else if (val[1] == 'R') {
+              rooks.push(key)
+            } else if (val[1] == 'Q') {
+              queens.push(key)
+            } else {
+              kings.push(key)
+            }
+          }
+        }
+
+        if (move.length === 4 && move[1] == 'x' && letters.includes(move[0])) {
+
+
+          if (toMove == 'w') {
+            var fw = parseInt(move[3]) - 1;
+            console.log(fw)
+            temp = move[0] + fw + "-" + move[2] + move[3];
+          } else {
+            var fw = parseInt(move[3]) + 1;
+            console.log(fw)
+            temp = move[0] + fw + "-" + move[2] + move[3];
+          }
+          console.log(temp)
+          return temp;
+
+        }
+
+        move = move.replace('x', '')
+
+
+        if (letters.includes(move[0]) && move.length === 3) {
+          move = move.replace(move[0], '')
+        }
+
+        if (move == "O-O") {
+          if (moveColor == "White") {
+            return "castles-short-white";
+          } else {
+            return "castles-short-black";
+          }
+        } else if (move == "O-O-O") {
+          if (moveColor == "White") {
+            return "castles-long-white"
+          } else {
+            return "castles-long-black"
+          }
+        }
+
+        if (move.length == 2) {
+          if (letters.includes(move[0])) { // PAWN PUSH LOGIC
+            console.log("It's a pawn move!")
+            console.log(pawns)
+            for (var i = 0; i < pawns.length; i++) {
+              if (pawns[i][0] == move[0] && Math.abs(move[1] - pawns[i][1]) < 3) {
+                if (toMove == pos[pawns[i]][0])
+                return pawns[i] + "-" + pawns[i][0] + move[1];
+              }
+            }
+          }
+        }
+
+        if (move.length == 3) {
+
+          if (move[0] == 'B') { // BISHOP MOVE LOGIC
+            console.log("It's a bishop move!")
+            to = move[1] + move[2]
+            for (var i = 0; i < bishops.length; i++) {
+              from = bishops[i];
+              if (verifyBishopMove(from, to) == true) {
+                console.log("Bishop move possible!")
+                return from + "-" + to;
+              }
+            }
+
+          } else if (move[0] == 'N') {
+            console.log("It's a knight move!")
+            to = move[1] + move[2]
+            for (var i = 0; i < knights.length; i++) {
+              from = knights[i];
+              if (verifyKnightMove(to, from) == true) {
+                console.log("Knight move possible!")
+                return from + "-" + to;
+              }
+            }
+          } else if (move[0] == 'R') {
+            console.log("It's a Rook move!")
+            to = move[1] + move[2]
+            for (var i = 0; i < rooks.length; i++) {
+              from = rooks[i];
+              if (verifyRookMove(from, to) == true) {
+                console.log("Rook move possible!")
+
+                return from + "-" + to;
+              }
+            }
+          } else if (move[0] == 'Q') {
+            console.log("It's a Queen move!")
+            to = move[1] + move[2]
+            for (var i = 0; i < queens.length; i++) {
+              from = queens[i];
+              if (verifyQueenMove(from, to) == true) {
+                console.log("Queen move possible!")
+
+                return from + "-" + to;
+              }
+            }
+          } else if (move[0] == 'K') {
+            console.log("It's a King move!")
+            to = move[1] + move[2]
+            for (var i = 0; i < kings.length; i++) {
+              from = kings[i];
+              if (verifyMove(from, to) == true) {
+                console.log("King move possible!")
+
+                return from + "-" + to;
+              }
+            }
+          }
+        }
+
+
+      }
+
+
+      var moves = openings[id]["FIELD11"]
+      document.getElementById("currentOpening").innerHTML = openings[id]["FIELD1"]
+      var moveList = getMoveArray(moves)
+      var i = 0;
+      var j = 0;
+
+
+      function movePiece() {
+        var toMove = 'w';
+        if (j === 1) { toMove = 'b'; }
+        var squareMove = getMove(moveList[i][j], toMove)
+
+        if (j === 0) {
+          j++;
+        } else if (j === 1) {
+          i++;
+          j = 0;
+        }
+        board.move(squareMove);
+        updateStatus();
+      }
+
+
+      function verifyKnightMove(from, to) {
+        if ((Math.abs(letters.indexOf(to[0]) - letters.indexOf(from[0])) === 1 && Math.abs(to[1] - from[1]) === 2) || (Math.abs(letters.indexOf(to[0]) - letters.indexOf(from[0])) === 2 && Math.abs(to[1] - from[1]) === 1)) {
+          return true;
+        }
+        return false;
+      }
+
+      function verifyBishopMove(from, to) {
+        if (Math.abs(letters.indexOf(to[0]) - letters.indexOf(from[0])) === Math.abs(to[1] - from[1])) {
+          return true;
+        }
+        return false
+      }
+
+      function verifyRookMove(from, to) {
+        if ((letters.indexOf(to[0]) == letters.indexOf(from[0])) || (to[1] == from[1])) {
+          return true;
+        }
+        return false;
+      }
+
+      function verifyQueenMove(from, to) {
+        if (verifyBishopMove(from, to) == true && verifyRookMove(from, to) == true) {
+          return true;
+        }
+        return false;
+      }
+    </script>
+
+  </body>
+
+
+</html>

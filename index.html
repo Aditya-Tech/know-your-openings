@@ -1,395 +1,175 @@
-
-
+<!DOCTYPE html>
 <html>
-  <head>
-    <!-- Latest compiled and minified CSS -->
-    <style>
-      a {
-        text-decoration: none;
-        display: inline-block;
-        padding: 8px 16px;
-      }
 
-      a:hover {
-        background-color: #ddd;
-        color: black;
-      }
+<head>
+  <title>Know Your Openings</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="globals.js"></script>
 
-      .previous {
-        background-color: #f1f1f1;
-        color: black;
-      }
+  <style>
+  #myInput {
+  align:right
+  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+  background-position: 10px 12px; /* Position the search icon */
+  background-repeat: no-repeat; /* Do not repeat the icon image */
+  width: 100%; /* Full-width */
+  height:20px;
+  font-size: 16px; /* Increase font-size */
+  padding: 12px 20px 12px 40px; /* Add some padding */
+  border: 1px solid #ddd; /* Add a grey border */
+  margin-bottom: 12px; /* Add some space below the input */
+}
 
-      .next {
-        background-color: #4CAF50;
-        color: white;
-      }
+#myUL {
+  /* Remove default list styling */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
 
-      .round {
-        border-radius: 50%;
-      }
+#myUL li a {
+  border: 1px solid #ddd; /* Add a border to all links */
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6; /* Grey background color */
+  padding: 12px; /* Add some padding */
+  text-decoration: none; /* Remove default text underline */
+  font-size: 18px; /* Increase the font-size */
+  color: black; /* Add a black text color */
+  display: block; /* Make it into a block element to fill the whole list */
+}
 
-      .container {
-        height: 100%;
-        display: table-cell;
-        vertical-align: middle;
-      }
-    </style>
-    <title>Study</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+#myUL li a.header {
+  background-color: #e2e2e2; /* Add a darker background color for headers */
+  cursor: default; /* Change cursor style */
+}
 
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+#myUL li a:hover:not(.header) {
+  background-color: #eee; /* Add a hover effect to all links, except for headers */
+}
+    body {
+      position: relative;
+    }
+    form {
+      height:20px;
+      padding: 30px 30px 45px 30px;
+      border-style: solid;
+      text-align: center;
+    }
 
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="json3.min.js"></script>
-    <script src="chessboardjs-master/website/js/chess-0.10.2.min.js"></script>
+    form:nth-child(even) {background: #CCC}
 
-    <script src="chessboardjs-master/src/chessboard.js"></script>
-    <script src="globals.js"></script>
-
-
-
-
-
-    <link rel="stylesheet" href="chessboardjs-master/src/chessboard.css" />
-  </head>
-
+    form:first-child {
+      height:20px;
+      padding-top: 75px;
+      border-style: solid;
+    }
 
 
-  <body>
-    <div id="content" style="text-align:center;">
-      <h1 id="currentOpening"></h1>
-      <div id="boardArea" class="col-md-10 col-md-offset-4">
-        <div id="board" style="height:400px; width:400px;" ></div>
+  </style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+      </button>
+        <a class="navbar-brand" href="#">Know Your Openings</a>
       </div>
-      <!-- <p>Status: <span id="status"></span></p>
-      <p>PGN: <span id="pgn"></span></p> -->
-      <!-- <a href="#" onclick="movePiece()" class="previous">&#8249;</a> -->
-      <a href="#" onclick="movePiece()" class="next">&#8250;</a>
+      <div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li><a href="menu.html" class='active-page'>Study</a></li>
+            <li><a href="#">Quiz</a></li>
+            <li><a href="info.html">About</a></li>
+
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top:12px; padding-right:20px;"><input type="text" id="myInput" onkeyup="searchList()" placeholder="Search for openings.."></li>
+          </ul>
+
+
+
+          <!-- <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div> -->
+        </div>
+      </div>
     </div>
-    <script>
+  </nav>
 
-      var tempHref = window.location.href.split("id=");
-      var id = tempHref[1];
+  <div class="container">
+
+</div>
+  <!-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."/> -->
+
+  <div id="openings">
+    <!-- <form action="opening.html" method="GET">
+      <div id="section1" class="section container-fluid">
+        <input type="hidden" name="id" value="0" />
+        <input type="submit" value="Alekhine Defense, Balogh Variation" />
+      </div>
+    </form> -->
+  </div>
 
 
-      var moveColor;
+  <script>
+    opList = [[openings[0]["FIELD1"], openings[0]["FIELD11"]]]
 
-      var board,
-          game = new Chess(),
-          statusEl = $('#status'),
-          fenEl = $('#fen'),
-          pgnEl = $('#pgn');
 
-      // do not pick up pieces if the game is over
-      // only pick up pieces for the side to move
-      var onDragStart = function(source, piece, position, orientation) {
-        if (game.game_over() === true ||
-            (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-            (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-          return false;
+    for (var i = 0; i < openings.length; i++) {
+      opList.push([openings[i]["FIELD1"], openings[i]["FIELD11"]])
+      $("#openings").append('<form action="opening.html" method="GET"><div id="section' + (i + 1) + '" class="section container-fluid"><input type="hidden" name="id" value="' + i + '"/><li style="list-style-type:none;"><input id="openingId" type="submit" style="background: transparent; border: none !important;" value="' + openings[i]["FIELD1"] + '"/></li></div></form>'  );
+    }
+
+
+
+    function searchList() {
+      var input, filter, list, li, a, i, temp;
+      input = document.getElementById('myInput');
+      filter = input.value.toUpperCase();
+      temp = document.getElementById("openings");
+      forms = temp.getElementsByTagName("form")
+      li = temp.getElementsByTagName('li');
+      var displayed = []
+
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        a = li[i].getElementsByTagName("input")[0];
+
+        if (a.value.toUpperCase().indexOf(filter) > -1) {
+          displayed.push(forms[i]);
+          displayed[0].style.paddingTop = "75px";
+          forms[i].style.display = "";
+
+        } else {
+          forms[i].style.display = "none";
+          forms[i].style.height = "20px"
+          forms[0].style.height = "75px";
         }
-      };
-
-      var onDrop = function(source, target) {
-        // see if the move is legal
-        var move = game.move({
-          from: source,
-          to: target,
-          promotion: 'q' // NOTE: always promote to a queen for example simplicity
-        });
-
-        // illegal move
-        if (move === null) return 'snapback';
-
-        updateStatus();
-
-      };
-
-      function verifyMove(source, target) {
-        var move = game.move({
-          from: source,
-          to: target,
-          promotion: 'q' // NOTE: always promote to a queen for example simplicity
-        });
-
-        // illegal move
-        if (move === null) return false;
-
-        return true;
       }
 
-      // update the board position after the piece snap
-      // for castling, en passant, pawn promotion
-      var onSnapEnd = function() {
-        board.position(game.fen());
-      };
-
-      var updateStatus = function() {
-        var status = '';
-
-        moveColor = 'White';
-        if (game.turn() === 'b') {
-          moveColor = 'Black';
+      if (input.value.length < 1) {
+        forms[0].style.paddingTop = "75px";
+        for (var i = 1; i < forms.length; i++) {
+          forms[i].style.paddingTop = "20px";
         }
-
-        // checkmate?
-        if (game.in_checkmate() === true) {
-          status = 'Game over, ' + moveColor + ' is in checkmate.';
-        }
-
-        // draw?
-        else if (game.in_draw() === true) {
-          status = 'Game over, drawn position';
-        }
-
-        // game still on
-        else {
-          status = moveColor + ' to move';
-
-          // check?
-          if (game.in_check() === true) {
-            status += ', ' + moveColor + ' is in check';
-          }
-        }
-
-        statusEl.html(status);
-        fenEl.html(game.fen());
-        pgnEl.html(game.pgn());
-      };
-
-      var cfg = {
-        draggable: true,
-        position: 'start',
-        onDragStart: onDragStart,
-        onDrop: onDrop,
-        onSnapEnd: onSnapEnd
-      };
-      board = ChessBoard('board', cfg);
-
-
-      function getMoveArray(moves) {
-        moves = moves.split(".");
-        for (var i = 0; i < moves.length; i++) {
-          if (moves[i] % 1 === 0) {
-            moves.splice(i, 1);
-          }
-        }
-
-        for (var i = 0; i < moves.length; i++) {
-          moves[i] = moves[i].split(" ");
-          if (moves[i].length > 2) {
-            moves[i].splice(2, 1);
-          }
-        }
-
-        return moves;
       }
 
-      var from;
-      var to;
-      var letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-
-      function getMove(move, toMove) {
-        var pos = board.position();
-
-        var pawns = [];
-        var bishops = [];
-        var knights = [];
-        var rooks = [];
-        var queens = [];
-        var kings = [];
+      // height:20px;
+      // padding-top: 75px;
+    }
 
 
-
-        for (var key in pos) {
-          if (pos.hasOwnProperty(key)) {
-            var val = pos[key];
-            if (val[1] == 'P') {
-              pawns.push(key)
-            } else if (val[1] == 'B') {
-              bishops.push(key)
-            } else if (val[1] == 'N') {
-              knights.push(key)
-            } else if (val[1] == 'R') {
-              rooks.push(key)
-            } else if (val[1] == 'Q') {
-              queens.push(key)
-            } else {
-              kings.push(key)
-            }
-          }
-        }
-
-        if (move.length === 4 && move[1] == 'x' && letters.includes(move[0])) {
-
-
-          if (toMove == 'w') {
-            var fw = parseInt(move[3]) - 1;
-            console.log(fw)
-            temp = move[0] + fw + "-" + move[2] + move[3];
-          } else {
-            var fw = parseInt(move[3]) + 1;
-            console.log(fw)
-            temp = move[0] + fw + "-" + move[2] + move[3];
-          }
-          console.log(temp)
-          return temp;
-
-        }
-
-        move = move.replace('x', '')
-
-
-        if (letters.includes(move[0]) && move.length === 3) {
-          move = move.replace(move[0], '')
-        }
-
-        if (move == "O-O") {
-          if (moveColor == "White") {
-            return "castles-short-white";
-          } else {
-            return "castles-short-black";
-          }
-        } else if (move == "O-O-O") {
-          if (moveColor == "White") {
-            return "castles-long-white"
-          } else {
-            return "castles-long-black"
-          }
-        }
-
-        if (move.length == 2) {
-          if (letters.includes(move[0])) { // PAWN PUSH LOGIC
-            console.log("It's a pawn move!")
-            console.log(pawns)
-            for (var i = 0; i < pawns.length; i++) {
-              if (pawns[i][0] == move[0] && Math.abs(move[1] - pawns[i][1]) < 3) {
-                if (toMove == pos[pawns[i]][0])
-                return pawns[i] + "-" + pawns[i][0] + move[1];
-              }
-            }
-          }
-        }
-
-        if (move.length == 3) {
-
-          if (move[0] == 'B') { // BISHOP MOVE LOGIC
-            console.log("It's a bishop move!")
-            to = move[1] + move[2]
-            for (var i = 0; i < bishops.length; i++) {
-              from = bishops[i];
-              if (verifyBishopMove(from, to) == true) {
-                console.log("Bishop move possible!")
-                return from + "-" + to;
-              }
-            }
-
-          } else if (move[0] == 'N') {
-            console.log("It's a knight move!")
-            to = move[1] + move[2]
-            for (var i = 0; i < knights.length; i++) {
-              from = knights[i];
-              if (verifyKnightMove(to, from) == true) {
-                console.log("Knight move possible!")
-                return from + "-" + to;
-              }
-            }
-          } else if (move[0] == 'R') {
-            console.log("It's a Rook move!")
-            to = move[1] + move[2]
-            for (var i = 0; i < rooks.length; i++) {
-              from = rooks[i];
-              if (verifyRookMove(from, to) == true) {
-                console.log("Rook move possible!")
-
-                return from + "-" + to;
-              }
-            }
-          } else if (move[0] == 'Q') {
-            console.log("It's a Queen move!")
-            to = move[1] + move[2]
-            for (var i = 0; i < queens.length; i++) {
-              from = queens[i];
-              if (verifyQueenMove(from, to) == true) {
-                console.log("Queen move possible!")
-
-                return from + "-" + to;
-              }
-            }
-          } else if (move[0] == 'K') {
-            console.log("It's a King move!")
-            to = move[1] + move[2]
-            for (var i = 0; i < kings.length; i++) {
-              from = kings[i];
-              if (verifyMove(from, to) == true) {
-                console.log("King move possible!")
-
-                return from + "-" + to;
-              }
-            }
-          }
-        }
-
-
-      }
-
-
-      var moves = openings[id]["FIELD11"]
-      document.getElementById("currentOpening").innerHTML = openings[id]["FIELD1"]
-      var moveList = getMoveArray(moves)
-      var i = 0;
-      var j = 0;
-
-
-      function movePiece() {
-        var toMove = 'w';
-        if (j === 1) { toMove = 'b'; }
-        var squareMove = getMove(moveList[i][j], toMove)
-
-        if (j === 0) {
-          j++;
-        } else if (j === 1) {
-          i++;
-          j = 0;
-        }
-        board.move(squareMove);
-        updateStatus();
-      }
-
-
-      function verifyKnightMove(from, to) {
-        if ((Math.abs(letters.indexOf(to[0]) - letters.indexOf(from[0])) === 1 && Math.abs(to[1] - from[1]) === 2) || (Math.abs(letters.indexOf(to[0]) - letters.indexOf(from[0])) === 2 && Math.abs(to[1] - from[1]) === 1)) {
-          return true;
-        }
-        return false;
-      }
-
-      function verifyBishopMove(from, to) {
-        if (Math.abs(letters.indexOf(to[0]) - letters.indexOf(from[0])) === Math.abs(to[1] - from[1])) {
-          return true;
-        }
-        return false
-      }
-
-      function verifyRookMove(from, to) {
-        if ((letters.indexOf(to[0]) == letters.indexOf(from[0])) || (to[1] == from[1])) {
-          return true;
-        }
-        return false;
-      }
-
-      function verifyQueenMove(from, to) {
-        if (verifyBishopMove(from, to) == true && verifyRookMove(from, to) == true) {
-          return true;
-        }
-        return false;
-      }
-    </script>
-
-  </body>
-
+  </script>
+</body>
 
 </html>
