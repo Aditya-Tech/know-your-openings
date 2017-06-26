@@ -11,6 +11,45 @@
   <script src="globals.js"></script>
 
   <style>
+  #myInput {
+  align:right
+  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+  background-position: 10px 12px; /* Position the search icon */
+  background-repeat: no-repeat; /* Do not repeat the icon image */
+  width: 100%; /* Full-width */
+  height:20px;
+  font-size: 16px; /* Increase font-size */
+  padding: 12px 20px 12px 40px; /* Add some padding */
+  border: 1px solid #ddd; /* Add a grey border */
+  margin-bottom: 12px; /* Add some space below the input */
+}
+
+#myUL {
+  /* Remove default list styling */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd; /* Add a border to all links */
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6; /* Grey background color */
+  padding: 12px; /* Add some padding */
+  text-decoration: none; /* Remove default text underline */
+  font-size: 18px; /* Increase the font-size */
+  color: black; /* Add a black text color */
+  display: block; /* Make it into a block element to fill the whole list */
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2; /* Add a darker background color for headers */
+  cursor: default; /* Change cursor style */
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee; /* Add a hover effect to all links, except for headers */
+}
     body {
       position: relative;
     }
@@ -37,29 +76,38 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <!-- <span class="icon-bar"></span>
           <span class="icon-bar"></span>
-          <span class="icon-bar"></span> -->
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
       </button>
         <a class="navbar-brand" href="#">Know Your Openings</a>
       </div>
       <div>
         <div class="collapse navbar-collapse" id="myNavbar">
-          <!-- <ul class="nav navbar-nav">
-            <li><a href="#section1">Section 1</a></li>
-            <li><a href="#section2">Section 2</a></li>
-            <li><a href="#section3">Section 3</a></li>
-            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Section 4 <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#section41">Section 4-1</a></li>
-                <li><a href="#section42">Section 4-2</a></li>
-              </ul>
-            </li>
-          </ul> -->
+          <ul class="nav navbar-nav">
+            <li><a href="menu.html">Study</a></li>
+            <li><a href="#">Quiz</a></li>
+            <li><a href="info.html">About</a></li>
+
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top:12px; padding-right:20px;"><input type="text" id="myInput" onkeyup="searchList()" placeholder="Search for openings.."></li>
+          </ul>
+
+
+
+          <!-- <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div> -->
         </div>
       </div>
     </div>
   </nav>
+
+  <div class="container">
+
+</div>
+  <!-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."/> -->
 
   <div id="openings">
     <!-- <form action="index.html" method="GET">
@@ -77,7 +125,38 @@
 
     for (var i = 0; i < openings.length; i++) {
       opList.push([openings[i]["FIELD1"], openings[i]["FIELD11"]])
-      $("#openings").append('<form action="index.html" method="GET"><div id="section' + (i + 1) + '" class="section container-fluid"><input type="hidden" name="id" value="' + i + '"/><input type="submit" style="background: transparent; border: none !important;" value="' + openings[i]["FIELD1"] + '"/></div></form>'  );
+      $("#openings").append('<form action="index.html" method="GET"><div id="section' + (i + 1) + '" class="section container-fluid"><input type="hidden" name="id" value="' + i + '"/><li style="list-style-type:none;"><input id="openingId" type="submit" style="background: transparent; border: none !important;" value="' + openings[i]["FIELD1"] + '"/></li></div></form>'  );
+    }
+
+
+
+    function searchList() {
+      var input, filter, list, li, a, i, temp;
+      input = document.getElementById('myInput');
+      filter = input.value.toUpperCase();
+      temp = document.getElementById("openings");
+      forms = temp.getElementsByTagName("form")
+      li = temp.getElementsByTagName('li');
+      var displayed = []
+
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        a = li[i].getElementsByTagName("input")[0];
+
+        if (a.value.toUpperCase().indexOf(filter) > -1) {
+          displayed.push(forms[i]);
+          displayed[0].style.paddingTop = "75px";
+          forms[i].style.display = "";
+
+        } else {
+          forms[i].style.display = "none";
+          forms[i].style.height = "20px"
+          forms[0].style.height = "75px";
+        }
+      }
+
+      // height:20px;
+      // padding-top: 75px;
     }
 
 
