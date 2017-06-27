@@ -59,16 +59,52 @@
 
 
   <body>
-    <div id="content" style="text-align:center;">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+          <a class="navbar-brand" href="#">Know Your Openings</a>
+        </div>
+        <div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+              <li><a href="index.html">Study</a></li>
+              <li><a href="#">Quiz</a></li>
+              <li><a href="info.html">About</a></li>
+
+            </ul>
+
+
+
+
+            <!-- <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+          </div> -->
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div id="content" class="text-center" style="padding-top: 50px; text-align:center;">
       <h1 id="currentOpening"></h1>
-      <div id="boardArea" class="col-md-10 col-md-offset-4">
+      <div id="boardArea" class="col-md-10 col-md-offset-4" style="padding-left:41px;">
         <div id="board" style="height:400px; width:400px;" ></div>
       </div>
       <!-- <p>Status: <span id="status"></span></p>
       <p>PGN: <span id="pgn"></span></p> -->
-      <!-- <a href="#" onclick="movePiece()" class="previous">&#8249;</a> -->
-      <a href="#" onclick="movePiece()" class="next">&#8250;</a>
+      <a href="#" onclick="prevMove()" class="next">&#8249;</a>
+      <a href="#" onclick="nextMove()" class="next">&#8250;</a><br />
+      <input type="button" onclick="returnToMenu();" value="Return to menu" /><br />
+      <input type="button" id="flipOrientationBtn" value="Flip orientation" /><br />
     </div>
+    <!-- <div><a href="index.html">Return</a></div> -->
+
+
+
     <script>
 
       var tempHref = window.location.href.split("id=");
@@ -344,7 +380,7 @@
       var j = 0;
 
 
-      function movePiece() {
+      function nextMove() {
         var toMove = 'w';
         if (j === 1) { toMove = 'b'; }
         var squareMove = getMove(moveList[i][j], toMove)
@@ -357,6 +393,10 @@
         }
         board.move(squareMove);
         updateStatus();
+      }
+
+      function prevMove() {
+
       }
 
 
@@ -382,10 +422,16 @@
       }
 
       function verifyQueenMove(from, to) {
-        if (verifyBishopMove(from, to) == true && verifyRookMove(from, to) == true) {
+        if (verifyBishopMove(from, to) == true || verifyRookMove(from, to) == true) {
           return true;
         }
         return false;
+      }
+
+      $('#flipOrientationBtn').on('click', board.flip);
+
+      function returnToMenu() {
+        window.location.href = "index.html"
       }
     </script>
 
