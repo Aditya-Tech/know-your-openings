@@ -67,14 +67,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-          <a class="navbar-brand" href="#">Know Your Openings</a>
+          <a class="navbar-brand" href="index.html">Know Your Openings</a>
         </div>
         <div>
           <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
               <li><a href="index.html">Study</a></li>
               <li><a href="#">Quiz</a></li>
-              <li><a href="info.html">About</a></li>
+              <li><a href="#">About</a></li>
 
             </ul>
 
@@ -299,7 +299,7 @@
 
         if (move.length == 2) {
           if (letters.includes(move[0])) { // PAWN PUSH LOGIC
-            console.log("It's a pawn move!")
+            // console.log("It's a pawn move!")
             console.log(pawns)
             for (var i = 0; i < pawns.length; i++) {
               if (pawns[i][0] == move[0] && Math.abs(move[1] - pawns[i][1]) < 3) {
@@ -313,55 +313,55 @@
         if (move.length == 3) {
 
           if (move[0] == 'B') { // BISHOP MOVE LOGIC
-            console.log("It's a bishop move!")
+            // console.log("It's a bishop move!")
             to = move[1] + move[2]
             for (var i = 0; i < bishops.length; i++) {
               from = bishops[i];
               if (verifyBishopMove(from, to) == true) {
-                console.log("Bishop move possible!")
+                // console.log("Bishop move possible!")
                 return from + "-" + to;
               }
             }
 
           } else if (move[0] == 'N') {
-            console.log("It's a knight move!")
+            // console.log("It's a knight move!")
             to = move[1] + move[2]
             for (var i = 0; i < knights.length; i++) {
               from = knights[i];
               if (verifyKnightMove(to, from) == true) {
-                console.log("Knight move possible!")
+                // console.log("Knight move possible!")
                 return from + "-" + to;
               }
             }
           } else if (move[0] == 'R') {
-            console.log("It's a Rook move!")
+            // console.log("It's a Rook move!")
             to = move[1] + move[2]
             for (var i = 0; i < rooks.length; i++) {
               from = rooks[i];
               if (verifyRookMove(from, to) == true) {
-                console.log("Rook move possible!")
+                // console.log("Rook move possible!")
 
                 return from + "-" + to;
               }
             }
           } else if (move[0] == 'Q') {
-            console.log("It's a Queen move!")
+            // console.log("It's a Queen move!")
             to = move[1] + move[2]
             for (var i = 0; i < queens.length; i++) {
               from = queens[i];
               if (verifyQueenMove(from, to) == true) {
-                console.log("Queen move possible!")
+                // console.log("Queen move possible!")
 
                 return from + "-" + to;
               }
             }
           } else if (move[0] == 'K') {
-            console.log("It's a King move!")
+            // console.log("It's a King move!")
             to = move[1] + move[2]
             for (var i = 0; i < kings.length; i++) {
               from = kings[i];
               if (verifyMove(from, to) == true) {
-                console.log("King move possible!")
+                // console.log("King move possible!")
 
                 return from + "-" + to;
               }
@@ -376,8 +376,11 @@
       var moves = openings[id]["FIELD11"]
       document.getElementById("currentOpening").innerHTML = openings[id]["FIELD1"]
       var moveList = getMoveArray(moves)
+      var positions = [];
+      var pos = 0;
       var i = 0;
       var j = 0;
+      var toMove = 'w';
 
 
       function nextMove() {
@@ -391,11 +394,38 @@
           i++;
           j = 0;
         }
+
+        positions.push(board.position());
+        pos = positions.length - 1;
+        console.log(i, j)
         board.move(squareMove);
+
         updateStatus();
       }
 
       function prevMove() {
+
+        if (i >= 0 && board.fen() != "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") {
+          var toMove = 'w';
+
+          if (j === 0 && (i > 0)) {
+            j = 1;
+            i--;
+          } else if (j === 1) {
+            j--;
+          }
+
+          if (j === 1) { toMove = 'b'; }
+          // var squareMove = getMove(moveList[i][j], toMove);
+          // console.log(squareMove)
+          // var reverseMove = squareMove.split("-")[1] + "-" + squareMove.split("-")[0];
+          // console.log(reverseMove)
+          // board.move(reverseMove);
+          board.position(positions[pos]);
+          pos = pos - 1;
+          updateStatus();
+        }
+
 
       }
 
